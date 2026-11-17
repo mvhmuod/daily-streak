@@ -1,0 +1,40 @@
+Commit small and often; small commits are easy to review and easy to revert.
+Name things for what they do, not for how they do it.
+Read the error message twice before searching for it.
+A failing test you wrote first is a spec you can trust.
+Delete dead code; version control remembers it for you.
+Prefer boring technology for the parts that must not break.
+Make it work, make it right, then make it fast, in that order.
+Log the inputs, not just the failures.
+If you copy-paste a third time, write a function.
+Write the README before the code to find out if the idea is clear.
+Use `git stash` before experiments, `git switch -c` before bigger ones.
+Time-box debugging: after 30 minutes, explain the problem to someone else.
+Comments should say why; the code already says what.
+Keep functions short enough to name honestly.
+Config belongs in files or env vars, never hard-coded in logic.
+Back up before you refactor; test before you trust the backup.
+Pin your dependency versions for anything you ship.
+Handle the empty case, the one-item case, and the huge case.
+Prefer immutable data when you can; mutation hides bugs.
+A good commit message explains why the change was needed.
+Measure before optimizing; the bottleneck is rarely where you think.
+Automate anything you do more than three times a week.
+Use meaningful defaults so the common case needs no flags.
+Fail early and loudly; silent failures cost the most.
+Review your own diff before asking anyone else to.
+Keep secrets out of git; rotate any that slip in.
+Learn your editor's shortcuts; they compound daily.
+Rubber-duck debugging works because explaining forces precision.
+Simple beats clever when you have to read it again in six months.
+Ship the smallest useful version, then improve it from real use.
+Use `git log -p -S"text"` to find when a line first appeared.
+Use `git bisect` to find the commit that broke things.
+Type hints are documentation that the tools can check.
+Regular expressions: write tests for them like any other code.
+Separate I/O from logic so the logic is trivially testable.
+Prefer composition over deep inheritance trees.
+Add timeouts to every network call.
+Make operations idempotent so retries are safe.
+Rest is part of the work; tired code has more bugs.
+Learn one tool deeply before collecting five shallowly.
