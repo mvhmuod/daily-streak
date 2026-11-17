@@ -1,0 +1,42 @@
+name: daily-entry
+
+on:
+  schedule:
+    - cron: '30 12 * * *'   # every day 12:30 UTC (runs even if your PC is off)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  entry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add today's entry if missing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          today=$(date -u +%F)
+          month=$(date -u +%Y-%m)
+          file="log/$month.md"
+          mkdir -p log
+          if [ -f "$file" ] && grep -q "^## $today" "$file"; then
+            echo "Entry for $today already exists"; exit 0
+          fi
+          mapfile -t tips < <(grep -v '^[[:space:]]*$' tips.txt)
+          count=$(cat log/*.md 2>/dev/null | grep -c '^## ' || true)
+          tip="${tips[$((count % ${#tips[@]}))]}"
+          if [ ! -f "$file" ]; then
+            printf '# %s\n\n' "$(date -u +'%B %Y')" > "$file"
+          fi
+          printf '## %s\n\nEntry #%s: %s\n\n' "$today" "$((count + 1))" "$tip" >> "$file"
+          # Use the owner's noreply email so the commit counts on the contribution graph
+          id=$(gh api "users/$OWNER" --jq .id)
+          git config user.name "$OWNER"
+          git config user.email "$id+$OWNER@users.noreply.github.com"
+          git add -A
+          git commit -m "Daily entry $today"
+          git push
