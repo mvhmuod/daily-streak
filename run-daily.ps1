@@ -5,6 +5,10 @@ $logFile = Join-Path $PSScriptRoot 'run.log'
 function Log($m) { "$(Get-Date -Format 's')  $m" | Add-Content -Path $logFile }
 
 try {
+    # Get any entry the cloud job already added, so we don't duplicate it
+    git pull --rebase --autostash 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { git rebase --abort 2>&1 | Out-Null; Log 'WARN: initial pull failed (offline?)' }
+
     $today    = Get-Date -Format 'yyyy-MM-dd'
     $logDir   = Join-Path $PSScriptRoot 'log'
     New-Item -ItemType Directory -Force $logDir | Out-Null
@@ -35,7 +39,8 @@ try {
 
     git push 2>&1 | Out-Null
     if ($LASTEXITCODE -ne 0) {
-        git pull --rebase 2>&1 | Out-Null
+        git pull --rebase --autostash 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) { git rebase --abort 2>&1 | Out-Null; throw 'git pull failed' }
         git push 2>&1 | Out-Null
         if ($LASTEXITCODE -ne 0) { throw 'git push failed' }
     }
